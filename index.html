@@ -1,205 +1,446 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Willowra - Teen Sleep App</title>
-  
-  <!-- Tailwind CSS & Google Fonts -->
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Willowra - Teen Sleep App</title>
+    <!-- Fun rounded Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Fredoka', cursive, sans-serif;
+        }
 
-  <style>
-    body {
-      font-family: 'Quicksand', system-ui, -apple-system, sans-serif;
-      background-color: #FFFDF9;
-      color: #1e293b;
-    }
-    h1, h2, h3, h4, .font-fun {
-      font-family: 'Fredoka', cursive, sans-serif;
-    }
-  </style>
+        body {
+            background: linear-gradient(135deg, #E6E6FA 0%, #E0F7FA 100%);
+            color: #4A4A4A;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        /* Phone Container Mockup */
+        .phone-frame {
+            width: 100%;
+            max-width: 390px;
+            height: 800px;
+            background: #FFFFFF;
+            border-radius: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+            border: 8px solid #FFF;
+        }
+
+        /* App Screens */
+        .screen {
+            display: none;
+            flex: 1;
+            flex-direction: column;
+            overflow-y: auto;
+            padding: 24px;
+            background: #FFFBFB;
+        }
+
+        .screen.active {
+            display: flex;
+        }
+
+        /* Common Elements */
+        h1, h2, h3 {
+            color: #6C5CE7;
+        }
+
+        .btn {
+            background-color: #FFB7B2;
+            color: #fff;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 20px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            box-shadow: 0 4px 10px rgba(255, 183, 178, 0.4);
+            transition: transform 0.2s;
+            text-align: center;
+        }
+
+        .btn:active {
+            transform: scale(0.96);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 14px 18px;
+            border-radius: 16px;
+            border: 2px solid #E0E0E0;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+
+        input[type="text"]:focus {
+            border-color: #6C5CE7;
+        }
+
+        /* 1. Welcome Screen */
+        #screen-welcome {
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            background: linear-gradient(180deg, #E6E6FA 0%, #FFF5EE 100%);
+        }
+
+        .welcome-cloud {
+            font-size: 50px;
+            margin-bottom: 10px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-8px); }
+        }
+
+        #screen-welcome h1 {
+            font-size: 32px;
+            margin-bottom: 8px;
+        }
+
+        #screen-welcome p {
+            color: #888;
+            margin-bottom: 24px;
+        }
+
+        /* Navigation Bar */
+        .nav-bar {
+            height: 70px;
+            background: #FFFFFF;
+            border-top: 2px solid #F0F0F0;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+        }
+
+        .nav-item {
+            background: none;
+            border: none;
+            font-size: 13px;
+            color: #AAA;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        .nav-item span {
+            font-size: 20px;
+        }
+
+        .nav-item.active {
+            color: #6C5CE7;
+        }
+
+        /* Dashboard Screen */
+        .greeting-card {
+            background: #E8F5E9;
+            padding: 20px;
+            border-radius: 22px;
+            margin-bottom: 20px;
+        }
+
+        .greeting-card h2 {
+            font-size: 20px;
+            color: #2E7D32;
+            margin-bottom: 6px;
+        }
+
+        .greeting-card p {
+            font-size: 14px;
+            color: #555;
+        }
+
+        .stats-box {
+            background: #F3E8FF;
+            padding: 16px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+        }
+
+        .stats-box h3 {
+            font-size: 16px;
+            margin-bottom: 10px;
+        }
+
+        .cycle-bar {
+            display: flex;
+            height: 14px;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .c-light { background: #A0C4FF; width: 40%; }
+        .c-deep { background: #BDB2FF; width: 45%; }
+        .c-awake { background: #FFADAD; width: 15%; }
+
+        .cycle-legend {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Relax Screen */
+        .sound-card {
+            background: #E0F7FA;
+            padding: 16px;
+            border-radius: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .sound-info h4 {
+            color: #00838F;
+            font-size: 16px;
+        }
+
+        .sound-info p {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .play-btn {
+            background: #00BCD4;
+            color: white;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        /* Plan Screen */
+        .plan-card {
+            background: #FFF9C4;
+            padding: 18px;
+            border-radius: 20px;
+            margin-bottom: 16px;
+        }
+
+        .plan-card h4 {
+            color: #F57F17;
+            margin-bottom: 8px;
+        }
+
+        .checklist-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        /* Tips Screen */
+        .tip-card {
+            background: #FFE0B2;
+            padding: 16px;
+            border-radius: 20px;
+            margin-bottom: 14px;
+        }
+
+        .tip-card h4 {
+            color: #E65100;
+            margin-bottom: 6px;
+        }
+
+        .tip-card p {
+            font-size: 13px;
+            color: #444;
+        }
+    </style>
 </head>
-<body class="bg-[#FFFDF9] text-slate-800 antialiased min-h-screen flex flex-col justify-between">
+<body>
 
-  <!-- Header / Navigation Bar -->
-  <header class="bg-white border-b border-amber-100 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
-    <div class="flex items-center gap-2">
-      <span class="font-fun text-2xl font-bold text-purple-700">willowra</span>
-      <span class="text-xs bg-purple-100 text-purple-800 px-2.5 py-1 rounded-full font-bold">Teen Sleep App</span>
-    </div>
-    
-    <nav class="flex gap-2">
-      <button id="btn-dash" onclick="switchTab('dash')" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold bg-purple-600 text-white transition">
-        📊 Dashboard
-      </button>
-      <button id="btn-track" onclick="switchTab('track')" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-purple-50 transition">
-        🌙 Tracker
-      </button>
-      <button id="btn-relax" onclick="switchTab('relax')" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-purple-50 transition">
-        🎧 Relax Sounds
-      </button>
-    </nav>
-  </header>
+    <div class="phone-frame">
 
-  <!-- Main Application Content -->
-  <main class="flex-1 max-w-4xl w-full mx-auto p-6">
-    
-    <!-- DASHBOARD VIEW -->
-    <div id="tab-dash" class="tab-view space-y-6">
-      <div class="bg-gradient-to-r from-purple-500 to-indigo-600 text-white p-6 sm:p-8 rounded-3xl shadow-md">
-        <h2 class="text-2xl sm:text-3xl font-bold font-fun">Welcome back to Willowra! 👋</h2>
-        <p class="mt-2 text-purple-100 text-sm sm:text-base">A colorful, friendly teen sleep tracker, relax music player, and bedtime planner.</p>
-      </div>
-
-      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <!-- Target Schedule Card -->
-        <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm flex flex-col justify-between">
-          <div>
-            <h3 class="text-lg font-bold font-fun text-slate-800">Target Sleep Schedule</h3>
-            <div class="text-3xl font-bold text-purple-700 mt-2">10:30 PM → 06:30 AM</div>
-            <p class="text-xs text-slate-500 mt-1">Optimal 8-hour target cycle for teen health</p>
-          </div>
-          <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
-            <span>Chronotype: <strong>Night Owl 🦉</strong></span>
-            <span>Target: <strong>8.0 hrs</strong></span>
-          </div>
+        <!-- SCREEN 1: Welcome Screen (What is your name?) -->
+        <div id="screen-welcome" class="screen active">
+            <div class="welcome-cloud">☁️✨😴</div>
+            <h1>Willowra</h1>
+            <p>Your Cozy Teen Sleep Companion</p>
+            <div style="width: 100%; max-width: 280px; display: flex; flex-direction: column; gap: 14px;">
+                <input type="text" id="username-input" placeholder="What is your name? ✨">
+                <button class="btn" onclick="startApp()">Let's Get Started</button>
+            </div>
+            <div style="margin-top: 30px; font-size: 11px; color: #999;">
+                Gamechangers Team: Arnav, Ashvik, Anchit, Aarnav
+            </div>
         </div>
-        
-        <!-- Sleep Planner Quick Action -->
-        <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm flex flex-col justify-between">
-          <div>
-            <h3 class="text-lg font-bold font-fun text-slate-800">Bedtime Cycle Planner</h3>
-            <p class="text-xs text-slate-500 mt-1">Want to wake up at 06:30 AM? Recommended bedtime options:</p>
-            <div class="mt-3 space-y-2 text-xs">
-              <div class="bg-purple-50 p-2 rounded-lg text-purple-900 font-semibold">• 09:15 PM (6 cycles / 9 hrs)</div>
-              <div class="bg-indigo-50 p-2 rounded-lg text-indigo-900 font-semibold">• 10:45 PM (5 cycles / 7.5 hrs)</div>
+
+        <!-- SCREEN 2: Track / Dashboard -->
+        <div id="screen-track" class="screen">
+            <div class="greeting-card">
+                <h2 id="greeting-text">Good Morning, Sleepyhead! ☀️</h2>
+                <p>Total Sleep Last Night: <b>8h 12m</b> (Great rest! 🎉)</p>
             </div>
-          </div>
-          <button onclick="switchTab('relax')" class="w-full mt-4 bg-pink-100 hover:bg-pink-200 text-pink-800 font-bold py-3 rounded-xl transition text-sm">
-            🎵 Play Sleep Sounds
-          </button>
+
+            <div class="stats-box">
+                <h3>📊 Nightly Rest Cycles</h3>
+                <div class="cycle-bar">
+                    <div class="c-light" title="Light Sleep"></div>
+                    <div class="c-deep" title="Deep Sleep"></div>
+                    <div class="c-awake" title="Awake"></div>
+                </div>
+                <div class="cycle-legend">
+                    <span>💧 Light (40%)</span>
+                    <span>🌙 Deep (45%)</span>
+                    <span>⚡ Awake (15%)</span>
+                </div>
+            </div>
+
+            <div style="background: #F5F5F5; padding: 16px; border-radius: 20px; text-align: center;">
+                <h3 style="font-size: 15px; margin-bottom: 8px;">🎤 Sleep Pattern Analysis</h3>
+                <p style="font-size: 13px; color: #666; line-height: 1.4;">
+                    Using phone microphone & motion sensors to track breathing rhythm & pillow movement effortlessly!
+                </p>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- TRACKER VIEW -->
-    <div id="tab-track" class="tab-view hidden space-y-6">
-      <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
-        <h2 class="text-xl font-bold font-fun text-slate-800">Recent Sleep Logs</h2>
-        
-        <div class="space-y-3">
-          <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-2">
-            <div>
-              <p class="font-bold text-slate-800">Oct 7, 2026 — 7.25 Hours</p>
-              <p class="text-xs text-slate-600 mt-0.5">Bedtime: 11:30 PM | Wake: 06:45 AM | Quality: ⭐⭐⭐⭐</p>
-              <p class="text-xs italic text-slate-500 mt-1">"Listened to rain sounds and fell asleep much faster."</p>
+        <!-- SCREEN 3: Relax Music Player -->
+        <div id="screen-relax" class="screen">
+            <h2 style="margin-bottom: 16px;">🎵 Relaxation Sounds</h2>
+            <p style="font-size: 13px; color: #777; margin-bottom: 16px;">Wind down before bed with soothing ambient loops.</p>
+            
+            <div class="sound-card">
+                <div class="sound-info">
+                    <h4>🌧️ Cozy Rain Window</h4>
+                    <p>Gentle drops for deep focus & sleep</p>
+                </div>
+                <button class="play-btn" onclick="togglePlay(this)">▶</button>
             </div>
-            <span class="inline-block text-xs bg-purple-100 text-purple-800 font-bold px-3 py-1 rounded-full self-start sm:self-auto">Cool Room</span>
-          </div>
 
-          <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-2">
-            <div>
-              <p class="font-bold text-slate-800">Oct 6, 2026 — 6.25 Hours</p>
-              <p class="text-xs text-slate-600 mt-0.5">Bedtime: 12:15 AM | Wake: 06:30 AM | Quality: ⭐⭐</p>
-              <p class="text-xs italic text-slate-500 mt-1">"Studied late for school. Felt tired in 1st period."</p>
+            <div class="sound-card">
+                <div class="sound-info">
+                    <h4>🌊 Ocean Waves</h4>
+                    <p>Calming rhythmic seashore</p>
+                </div>
+                <button class="play-btn" onclick="togglePlay(this)">▶</button>
             </div>
-            <span class="inline-block text-xs bg-rose-100 text-rose-800 font-bold px-3 py-1 rounded-full self-start sm:self-auto">Test Stress</span>
-          </div>
+
+            <div class="sound-card">
+                <div class="sound-info">
+                    <h4>🍃 Forest Breeze</h4>
+                    <p>Soft wind through pine trees</p>
+                </div>
+                <button class="play-btn" onclick="togglePlay(this)">▶</button>
+            </div>
         </div>
-      </div>
-    </div>
 
-    <!-- RELAX SOUNDS VIEW -->
-    <div id="tab-relax" class="tab-view hidden space-y-6">
-      <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
-        <h2 class="text-xl font-bold font-fun text-slate-800">Sleep Sounds & Ambience</h2>
-        <p class="text-xs text-slate-500">Synthesized audio engine for relaxing noise frequencies.</p>
-
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
-          <div class="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex justify-between items-center">
-            <div>
-              <h4 class="font-bold text-amber-900">Warm Brown Noise</h4>
-              <p class="text-xs text-amber-700">Cozy deep rumble sound</p>
+        <!-- SCREEN 4: Sleep Planner & Alarms -->
+        <div id="screen-plan" class="screen">
+            <h2 style="margin-bottom: 16px;">⏰ Sleep Planner</h2>
+            
+            <div class="plan-card">
+                <h4>Tonight's Targets</h4>
+                <p style="font-size: 14px; margin-top: 4px;">Bedtime Goal: <b>10:30 PM</b></p>
+                <p style="font-size: 14px;">Wake-up Alarm: <b>6:45 AM</b></p>
             </div>
-            <button id="audio-toggle-btn" onclick="toggleBrownNoise()" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl transition">
-              Play
+
+            <div class="plan-card" style="background: #E1F5FE;">
+                <h4 style="color: #0288D1;">✨ Pre-Bed Routine</h4>
+                <div class="checklist-item"><input type="checkbox" checked> Put phone away 30m prior</div>
+                <div class="checklist-item"><input type="checkbox"> Dim bedroom lights</div>
+                <div class="checklist-item"><input type="checkbox"> Listen to 5m relaxing audio</div>
+            </div>
+        </div>
+
+        <!-- SCREEN 5: Tips & Sleep Hygiene -->
+        <div id="screen-tips" class="screen">
+            <h2 style="margin-bottom: 16px;">💡 Sleep Hygiene Tips</h2>
+            
+            <div class="tip-card">
+                <h4>📱 Screen Detox</h4>
+                <p>Blue light tricks your brain into thinking it's daytime. Put devices down 30 minutes before sleep!</p>
+            </div>
+
+            <div class="tip-card">
+                <h4>☕ Caffeine Cutoff</h4>
+                <p>Avoid energy drinks, soda, and coffee after 4 PM to keep your sleep cycles smooth.</p>
+            </div>
+
+            <div class="tip-card">
+                <h4>☀️ Morning Sunlight</h4>
+                <p>Get 10 minutes of natural light right after waking up to sync your body's natural clock.</p>
+            </div>
+        </div>
+
+        <!-- Bottom Navigation Bar (Hidden on Welcome Screen) -->
+        <div class="nav-bar" id="bottom-nav" style="display: none;">
+            <button class="nav-item active" onclick="switchTab('track', this)">
+                <span>📊</span>Track
             </button>
-          </div>
+            <button class="nav-item" onclick="switchTab('relax', this)">
+                <span>🎵</span>Relax
+            </button>
+            <button class="nav-item" onclick="switchTab('plan', this)">
+                <span>⏰</span>Plan
+            </button>
+            <button class="nav-item" onclick="switchTab('tips', this)">
+                <span>💡</span>Tips
+            </button>
         </div>
-      </div>
+
     </div>
 
-  </main>
+    <script>
+        let userName = "Friend";
 
-  <!-- Footer with Team Credits -->
-  <footer class="bg-white border-t border-amber-100 py-4 px-6 text-center text-xs text-slate-500">
-    <p><strong>willowra</strong> · Team Gamechangers: Arnav Kumar, Ashvik Bansal, Anchit Gupta, Aarnav Kansal</p>
-  </footer>
-
-  <!-- Web Logic & Audio Synthesizer -->
-  <script>
-    function switchTab(tabName) {
-      document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
-      document.querySelectorAll('.tab-btn').forEach(el => {
-        el.classList.remove('bg-purple-600', 'text-white');
-        el.classList.add('text-slate-600');
-      });
-
-      document.getElementById('tab-' + tabName).classList.remove('hidden');
-      const activeBtn = document.getElementById('btn-' + tabName);
-      activeBtn.classList.add('bg-purple-600', 'text-white');
-      activeBtn.classList.remove('text-slate-600');
-    }
-
-    let audioCtx = null;
-    let noiseSource = null;
-    let isPlaying = false;
-
-    function toggleBrownNoise() {
-      const btn = document.getElementById('audio-toggle-btn');
-      if (!isPlaying) {
-        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-
-        const bufferSize = audioCtx.sampleRate * 2;
-        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
-        const data = buffer.getChannelData(0);
-        let lastOut = 0.0;
-        for (let i = 0; i < bufferSize; i++) {
-          const white = Math.random() * 2 - 1;
-          data[i] = (lastOut + 0.02 * white) / 1.02;
-          lastOut = data[i];
-          data[i] *= 3.5;
+        function startApp() {
+            const input = document.getElementById('username-input').value.trim();
+            if (input !== "") {
+                userName = input;
+            }
+            document.getElementById('greeting-text').innerText = `Good Morning, ${userName}! ☀️`;
+            
+            // Switch from welcome to track screen
+            document.getElementById('screen-welcome').classList.remove('active');
+            document.getElementById('screen-track').classList.add('active');
+            document.getElementById('bottom-nav').style.display = 'flex';
         }
 
-        noiseSource = audioCtx.createBufferSource();
-        noiseSource.buffer = buffer;
-        noiseSource.loop = true;
-        
-        const filter = audioCtx.createBiquadFilter();
-        filter.type = 'lowpass';
-        filter.frequency.setValueAtTime(320, audioCtx.currentTime);
+        function switchTab(tabName, btnElement) {
+            // Hide all screens
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            // Show selected screen
+            document.getElementById(`screen-${tabName}`).classList.add('active');
 
-        noiseSource.connect(filter);
-        filter.connect(audioCtx.destination);
-        noiseSource.start();
-
-        btn.textContent = 'Pause';
-        btn.classList.replace('bg-amber-600', 'bg-red-600');
-        isPlaying = true;
-      } else {
-        if (noiseSource) {
-          noiseSource.stop();
-          noiseSource.disconnect();
+            // Update active nav button styling
+            document.querySelectorAll('.nav-item').forEach(b => b.classList.remove('active'));
+            btnElement.classList.add('active');
         }
-        btn.textContent = 'Play';
-        btn.classList.replace('bg-red-600', 'bg-amber-600');
-        isPlaying = false;
-      }
-    }
-  </script>
+
+        function togglePlay(btn) {
+            if (btn.innerText === "▶") {
+                btn.innerText = "⏸";
+                btn.style.background = "#FF7043";
+            } else {
+                btn.innerText = "▶";
+                btn.style.background = "#00BCD4";
+            }
+        }
+    </script>
 </body>
 </html>
