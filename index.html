@@ -4,165 +4,200 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Willowra - Teen Sleep App</title>
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: 'Quicksand', system-ui, -apple-system, sans-serif;
       background-color: #FFFDF9;
       color: #1e293b;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
     }
-    header {
-      background: #ffffff;
-      border-bottom: 1px solid #fef3c7;
-      padding: 1rem 1.5rem;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+    h1, h2, h3, h4, .font-fun {
+      font-family: 'Fredoka', cursive, sans-serif;
     }
-    .logo { font-size: 1.5rem; font-weight: 700; color: #7e22ce; }
-    .badge { background: #f3e8ff; color: #6b21a8; font-size: 0.75rem; font-weight: 700; padding: 0.2rem 0.6rem; border-radius: 9999px; margin-left: 0.5rem; }
-    nav button {
-      background: transparent;
-      border: none;
-      padding: 0.5rem 1rem;
-      font-weight: 700;
-      color: #475569;
-      cursor: pointer;
-      border-radius: 0.75rem;
-      margin-left: 0.25rem;
-    }
-    nav button.active { background: #7e22ce; color: #ffffff; }
-    main { max-width: 56rem; width: 100%; margin: 0 auto; padding: 1.5rem; flex: 1; }
-    .hero { background: linear-gradient(to right, #9333ea, #4f46e5); color: #ffffff; padding: 1.5rem; border-radius: 1.5rem; margin-bottom: 1.5rem; }
-    .hero h2 { font-size: 1.5rem; margin-bottom: 0.5rem; }
-    .card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; }
-    .card { background: #ffffff; padding: 1.5rem; border-radius: 1rem; border: 1px solid #fef3c7; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-    .card h3 { font-size: 1.125rem; color: #1e293b; margin-bottom: 0.5rem; }
-    .time { font-size: 1.875rem; font-weight: 700; color: #7e22ce; margin: 0.5rem 0; }
-    .btn-action { width: 100%; background: #fce7f3; color: #831843; font-weight: 700; padding: 0.75rem; border: none; border-radius: 0.75rem; cursor: pointer; margin-top: 0.5rem; }
-    .btn-action:hover { background: #fbcfe8; }
-    .hidden { display: none; }
-    footer { background: #ffffff; border-top: 1px solid #fef3c7; padding: 1rem; text-align: center; font-size: 0.75rem; color: #64748b; }
   </style>
 </head>
-<body>
+<body class="bg-[#FFFDF9] text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
-  <!-- Header -->
-  <header>
-    <div>
-      <span class="logo">willowra</span>
-      <span class="badge">Teen Sleep Tracker</span>
+  <!-- Header / Navigation Bar -->
+  <header class="bg-white border-b border-amber-100 px-6 py-4 flex flex-col sm:flex-row items-center justify-between gap-4 shadow-sm">
+    <div class="flex items-center gap-2">
+      <span class="font-fun text-2xl font-bold text-purple-700">willowra</span>
+      <span class="text-xs bg-purple-100 text-purple-800 px-2.5 py-1 rounded-full font-bold">Teen Sleep App</span>
     </div>
-    <nav>
-      <button id="btn-dash" class="active" onclick="switchTab('dash')">📊 Dashboard</button>
-      <button id="btn-track" onclick="switchTab('track')">🌙 Tracker</button>
-      <button id="btn-relax" onclick="switchTab('relax')">🎧 Relax Sounds</button>
+    
+    <nav class="flex gap-2">
+      <button id="btn-dash" onclick="switchTab('dash')" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold bg-purple-600 text-white transition">
+        📊 Dashboard
+      </button>
+      <button id="btn-track" onclick="switchTab('track')" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-purple-50 transition">
+        🌙 Tracker
+      </button>
+      <button id="btn-relax" onclick="switchTab('relax')" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-purple-50 transition">
+        🎧 Relax Sounds
+      </button>
     </nav>
   </header>
 
-  <!-- Main Views -->
-  <main>
-    <!-- Dashboard -->
-    <div id="tab-dash">
-      <div class="hero">
-        <h2>Welcome back to Willowra! 👋</h2>
-        <p>Your bedtime planner & sleep assistant is ready.</p>
+  <!-- Main Application Content -->
+  <main class="flex-1 max-w-4xl w-full mx-auto p-6">
+    
+    <!-- DASHBOARD VIEW -->
+    <div id="tab-dash" class="tab-view space-y-6">
+      <div class="bg-gradient-to-r from-purple-500 to-indigo-600 text-white p-6 sm:p-8 rounded-3xl shadow-md">
+        <h2 class="text-2xl sm:text-3xl font-bold font-fun">Welcome back to Willowra! 👋</h2>
+        <p class="mt-2 text-purple-100 text-sm sm:text-base">A colorful, friendly teen sleep tracker, relax music player, and bedtime planner.</p>
       </div>
-      <div class="card-grid">
-        <div class="card">
-          <h3>Target Sleep Schedule</h3>
-          <div class="time">10:30 PM → 06:30 AM</div>
-          <p style="font-size: 0.75rem; color: #64748b;">Optimal 8-hour target cycle</p>
-        </div>
-        <div class="card">
-          <h3>Quick Sound Player</h3>
-          <button class="btn-action" onclick="switchTab('relax')">🎵 Play Sleep Sounds</button>
-        </div>
-      </div>
-    </div>
 
-    <!-- Tracker -->
-    <div id="tab-track" class="hidden">
-      <div class="card">
-        <h3>Sleep Logs & History</h3>
-        <div style="background: #fffbeb; padding: 1rem; border-radius: 0.75rem; border: 1px solid #fde68a; margin-top: 0.75rem;">
-          <strong>Oct 7, 2026 - 7.25 hrs</strong>
-          <p style="font-size: 0.875rem; color: #475569; margin-top: 0.25rem;">Rating: ⭐⭐⭐⭐ (Felt Pretty Good)</p>
-        </div>
-      </div>
-    </div>
-
-    <!-- Relax Sounds -->
-    <div id="tab-relax" class="hidden">
-      <div class="card">
-        <h3>Sleep Sounds & Ambience</h3>
-        <div style="background: #fffbeb; padding: 1rem; border-radius: 0.75rem; border: 1px solid #fde68a; margin-top: 0.75rem; display: flex; justify-content: space-between; align-items: center;">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <!-- Target Schedule Card -->
+        <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm flex flex-col justify-between">
           <div>
-            <strong>Warm Brown Noise</strong>
-            <p style="font-size: 0.75rem; color: #78350f;">Cozy deep rumble sound</p>
+            <h3 class="text-lg font-bold font-fun text-slate-800">Target Sleep Schedule</h3>
+            <div class="text-3xl font-bold text-purple-700 mt-2">10:30 PM → 06:30 AM</div>
+            <p class="text-xs text-slate-500 mt-1">Optimal 8-hour target cycle for teen health</p>
           </div>
-          <button id="audio-btn" onclick="toggleNoise()" style="background: #d97706; color: #ffffff; border: none; padding: 0.5rem 1rem; border-radius: 0.5rem; font-weight: 700; cursor: pointer;">Play</button>
+          <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-600">
+            <span>Chronotype: <strong>Night Owl 🦉</strong></span>
+            <span>Target: <strong>8.0 hrs</strong></span>
+          </div>
+        </div>
+        
+        <!-- Sleep Planner Quick Action -->
+        <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm flex flex-col justify-between">
+          <div>
+            <h3 class="text-lg font-bold font-fun text-slate-800">Bedtime Cycle Planner</h3>
+            <p class="text-xs text-slate-500 mt-1">Want to wake up at 06:30 AM? Recommended bedtime options:</p>
+            <div class="mt-3 space-y-2 text-xs">
+              <div class="bg-purple-50 p-2 rounded-lg text-purple-900 font-semibold">• 09:15 PM (6 cycles / 9 hrs)</div>
+              <div class="bg-indigo-50 p-2 rounded-lg text-indigo-900 font-semibold">• 10:45 PM (5 cycles / 7.5 hrs)</div>
+            </div>
+          </div>
+          <button onclick="switchTab('relax')" class="w-full mt-4 bg-pink-100 hover:bg-pink-200 text-pink-800 font-bold py-3 rounded-xl transition text-sm">
+            🎵 Play Sleep Sounds
+          </button>
         </div>
       </div>
     </div>
+
+    <!-- TRACKER VIEW -->
+    <div id="tab-track" class="tab-view hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
+        <h2 class="text-xl font-bold font-fun text-slate-800">Recent Sleep Logs</h2>
+        
+        <div class="space-y-3">
+          <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+            <div>
+              <p class="font-bold text-slate-800">Oct 7, 2026 — 7.25 Hours</p>
+              <p class="text-xs text-slate-600 mt-0.5">Bedtime: 11:30 PM | Wake: 06:45 AM | Quality: ⭐⭐⭐⭐</p>
+              <p class="text-xs italic text-slate-500 mt-1">"Listened to rain sounds and fell asleep much faster."</p>
+            </div>
+            <span class="inline-block text-xs bg-purple-100 text-purple-800 font-bold px-3 py-1 rounded-full self-start sm:self-auto">Cool Room</span>
+          </div>
+
+          <div class="p-4 bg-slate-50 border border-slate-200 rounded-xl flex flex-col sm:flex-row justify-between sm:items-center gap-2">
+            <div>
+              <p class="font-bold text-slate-800">Oct 6, 2026 — 6.25 Hours</p>
+              <p class="text-xs text-slate-600 mt-0.5">Bedtime: 12:15 AM | Wake: 06:30 AM | Quality: ⭐⭐</p>
+              <p class="text-xs italic text-slate-500 mt-1">"Studied late for school. Felt tired in 1st period."</p>
+            </div>
+            <span class="inline-block text-xs bg-rose-100 text-rose-800 font-bold px-3 py-1 rounded-full self-start sm:self-auto">Test Stress</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELAX SOUNDS VIEW -->
+    <div id="tab-relax" class="tab-view hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
+        <h2 class="text-xl font-bold font-fun text-slate-800">Sleep Sounds & Ambience</h2>
+        <p class="text-xs text-slate-500">Synthesized audio engine for relaxing noise frequencies.</p>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+          <div class="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex justify-between items-center">
+            <div>
+              <h4 class="font-bold text-amber-900">Warm Brown Noise</h4>
+              <p class="text-xs text-amber-700">Cozy deep rumble sound</p>
+            </div>
+            <button id="audio-toggle-btn" onclick="toggleBrownNoise()" class="px-5 py-2.5 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl transition">
+              Play
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </main>
 
-  <!-- Footer -->
-  <footer>
-    <strong>willowra</strong> · Team Gamechangers: Arnav Kumar, Ashvik Bansal, Anchit Gupta, Aarnav Kansal
+  <!-- Footer with Team Credits -->
+  <footer class="bg-white border-t border-amber-100 py-4 px-6 text-center text-xs text-slate-500">
+    <p><strong>willowra</strong> · Team Gamechangers: Arnav Kumar, Ashvik Bansal, Anchit Gupta, Aarnav Kansal</p>
   </footer>
 
+  <!-- Web Logic & Audio Synthesizer -->
   <script>
-    function switchTab(tab) {
-      document.getElementById('tab-dash').classList.add('hidden');
-      document.getElementById('tab-track').classList.add('hidden');
-      document.getElementById('tab-relax').classList.add('hidden');
-      document.getElementById('btn-dash').classList.remove('active');
-      document.getElementById('btn-track').classList.remove('active');
-      document.getElementById('btn-relax').classList.remove('active');
+    function switchTab(tabName) {
+      document.querySelectorAll('.tab-view').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove('bg-purple-600', 'text-white');
+        el.classList.add('text-slate-600');
+      });
 
-      document.getElementById('tab-' + tab).classList.remove('hidden');
-      document.getElementById('btn-' + tab).classList.add('active');
+      document.getElementById('tab-' + tabName).classList.remove('hidden');
+      const activeBtn = document.getElementById('btn-' + tabName);
+      activeBtn.classList.add('bg-purple-600', 'text-white');
+      activeBtn.classList.remove('text-slate-600');
     }
 
-    let audioCtx = null, noiseNode = null, playing = false;
+    let audioCtx = null;
+    let noiseSource = null;
+    let isPlaying = false;
 
-    function toggleNoise() {
-      const btn = document.getElementById('audio-btn');
-      if (!playing) {
-        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-        const bufSize = audioCtx.sampleRate * 2;
-        const buf = audioCtx.createBuffer(1, bufSize, audioCtx.sampleRate);
-        const data = buf.getChannelData(0);
+    function toggleBrownNoise() {
+      const btn = document.getElementById('audio-toggle-btn');
+      if (!isPlaying) {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const bufferSize = audioCtx.sampleRate * 2;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
         let lastOut = 0.0;
-        for (let i = 0; i < bufSize; i++) {
+        for (let i = 0; i < bufferSize; i++) {
           const white = Math.random() * 2 - 1;
           data[i] = (lastOut + 0.02 * white) / 1.02;
           lastOut = data[i];
           data[i] *= 3.5;
         }
-        noiseNode = audioCtx.createBufferSource();
-        noiseNode.buffer = buf;
-        noiseNode.loop = true;
+
+        noiseSource = audioCtx.createBufferSource();
+        noiseSource.buffer = buffer;
+        noiseSource.loop = true;
+        
         const filter = audioCtx.createBiquadFilter();
         filter.type = 'lowpass';
-        filter.frequency.value = 320;
-        noiseNode.connect(filter);
+        filter.frequency.setValueAtTime(320, audioCtx.currentTime);
+
+        noiseSource.connect(filter);
         filter.connect(audioCtx.destination);
-        noiseNode.start();
+        noiseSource.start();
+
         btn.textContent = 'Pause';
-        btn.style.background = '#dc2626';
-        playing = true;
+        btn.classList.replace('bg-amber-600', 'bg-red-600');
+        isPlaying = true;
       } else {
-        if (noiseNode) noiseNode.stop();
+        if (noiseSource) {
+          noiseSource.stop();
+          noiseSource.disconnect();
+        }
         btn.textContent = 'Play';
-        btn.style.background = '#d97706';
-        playing = false;
+        btn.classList.replace('bg-red-600', 'bg-amber-600');
+        isPlaying = false;
       }
     }
   </script>
