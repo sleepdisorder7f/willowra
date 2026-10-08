@@ -5,16 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Willowra - Teen Sleep App</title>
   
-  <!-- Tailwind CSS & Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
-  
-  <!-- React & Babel CDNs -->
-  <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
-  <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
-  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
   <style>
     body {
@@ -27,118 +21,152 @@
     }
   </style>
 </head>
-<body class="bg-[#FFFDF9] text-slate-800 antialiased selection:bg-pink-300 selection:text-slate-900">
-  
-  <div id="root"></div>
+<body class="bg-[#FFFDF9] text-slate-800 antialiased min-h-screen flex flex-col justify-between">
 
-  <!-- React Application Script -->
-  <script type="text/babel">
-    const { useState, useEffect } = React;
+  <!-- Navigation Bar -->
+  <header class="bg-white border-b border-amber-100 px-6 py-4 flex items-center justify-between shadow-sm">
+    <div class="flex items-center gap-2">
+      <span class="font-fun text-2xl font-bold text-purple-700">willowra</span>
+      <span class="text-xs bg-purple-100 text-purple-800 px-2.5 py-1 rounded-full font-bold">Teen Sleep Tracker</span>
+    </div>
+    
+    <nav class="flex gap-2">
+      <button id="btn-dashboard" onclick="showTab('dashboard')" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold bg-purple-600 text-white">
+        📊 Dashboard
+      </button>
+      <button id="btn-tracker" onclick="showTab('tracker')" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-purple-50">
+        🌙 Tracker
+      </button>
+      <button id="btn-relax" onclick="showTab('relax')" class="tab-btn px-4 py-2 rounded-xl text-sm font-bold text-slate-600 hover:bg-purple-50">
+        🎧 Relax Sounds
+      </button>
+    </nav>
+  </header>
 
-    const TEAM_MEMBERS = ['Arnav Kumar', 'Ashvik Bansal', 'Anchit Gupta', 'Aarnav Kansal'];
+  <!-- Main Views -->
+  <main class="flex-1 max-w-4xl w-full mx-auto p-6">
+    
+    <!-- DASHBOARD TAB -->
+    <div id="tab-dashboard" class="tab-content space-y-6">
+      <div class="bg-gradient-to-r from-purple-500 to-indigo-600 text-white p-6 rounded-3xl shadow-md">
+        <h2 class="text-2xl font-bold font-fun">Welcome back to Willowra! 👋</h2>
+        <p class="mt-1 text-purple-100">Your bedtime planner & sleep assistant is ready.</p>
+      </div>
 
-    function App() {
-      const [currentTab, setCurrentTab] = useState('dashboard');
-      const [isPlayingAudio, setIsPlayingAudio] = useState(false);
-
-      return (
-        <div class="min-h-screen flex flex-col justify-between">
-          <!-- Navigation Bar -->
-          <header class="bg-white border-b border-amber-100 px-6 py-4 flex items-center justify-between shadow-sm">
-            <div class="flex items-center gap-2">
-              <span class="font-fun text-2xl font-bold text-purple-700">willowra</span>
-              <span class="text-xs bg-purple-100 text-purple-800 px-2 py-0.5 rounded-full font-bold">Teen Sleep Tracker</span>
-            </div>
-            
-            <nav class="flex gap-2">
-              <button 
-                onClick={() => setCurrentTab('dashboard')} 
-                class={`px-4 py-2 rounded-xl text-sm font-bold transition ${currentTab === 'dashboard' ? 'bg-purple-600 text-white' : 'hover:bg-purple-50 text-slate-600'}`}
-              >
-                📊 Dashboard
-              </button>
-              <button 
-                onClick={() => setCurrentTab('tracker')} 
-                class={`px-4 py-2 rounded-xl text-sm font-bold transition ${currentTab === 'tracker' ? 'bg-purple-600 text-white' : 'hover:bg-purple-50 text-slate-600'}`}
-              >
-                🌙 Tracker
-              </button>
-              <button 
-                onClick={() => setCurrentTab('relax')} 
-                class={`px-4 py-2 rounded-xl text-sm font-bold transition ${currentTab === 'relax' ? 'bg-purple-600 text-white' : 'hover:bg-purple-50 text-slate-600'}`}
-              >
-                🎧 Relax Sounds
-              </button>
-            </nav>
-          </header>
-
-          <!-- Main App Views -->
-          <main class="flex-1 max-w-4xl w-full mx-auto p-6">
-            {currentTab === 'dashboard' && (
-              <div class="space-y-6">
-                <div class="bg-gradient-to-r from-purple-500 to-indigo-600 text-white p-6 rounded-3xl shadow-md">
-                  <h2 class="text-2xl font-bold font-fun">Welcome back to Willowra! 👋</h2>
-                  <p class="mt-1 text-purple-100">Your bedtime planner & sleep assistant is ready.</p>
-                </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                  <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm">
-                    <h3 class="text-lg font-bold font-fun text-slate-800">Target Sleep Schedule</h3>
-                    <p class="text-3xl font-bold text-purple-700 mt-2">10:30 PM → 06:30 AM</p>
-                    <p class="text-xs text-slate-500 mt-1">Optimal 8-hour target cycle</p>
-                  </div>
-                  
-                  <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm">
-                    <h3 class="text-lg font-bold font-fun text-slate-800">Quick Actions</h3>
-                    <button onClick={() => setCurrentTab('relax')} class="w-full mt-3 bg-pink-100 hover:bg-pink-200 text-pink-800 font-bold py-2 rounded-xl transition">
-                      🎵 Play Sleep Sounds
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-
-            {currentTab === 'tracker' && (
-              <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
-                <h2 class="text-xl font-bold font-fun text-slate-800">Sleep Logs & History</h2>
-                <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl">
-                  <p class="font-bold text-slate-700">Oct 7, 2026 - 7.25 hrs</p>
-                  <p class="text-sm text-slate-600">Rating: ⭐⭐⭐⭐ (Felt Pretty Good)</p>
-                  <span class="inline-block mt-2 text-xs bg-purple-100 text-purple-800 font-bold px-2.5 py-1 rounded-full">Cool Room</span>
-                </div>
-              </div>
-            )}
-
-            {currentTab === 'relax' && (
-              <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
-                <h2 class="text-xl font-bold font-fun text-slate-800">Sleep Sounds & Ambience</h2>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div class="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex justify-between items-center">
-                    <div>
-                      <h4 class="font-bold text-amber-900">Warm Brown Noise</h4>
-                      <p class="text-xs text-amber-700">Cozy deep rumble</p>
-                    </div>
-                    <button 
-                      onClick={() => setIsPlayingAudio(!isPlayingAudio)}
-                      class="px-4 py-2 bg-amber-600 text-white text-xs font-bold rounded-xl"
-                    >
-                      {isPlayingAudio ? 'Pause' : 'Play'}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            )}
-          </main>
-
-          <!-- App Footer -->
-          <footer class="bg-white border-t border-amber-100 py-4 px-6 text-center text-xs text-slate-500">
-            <p><strong>willowra</strong> · Team Gamechangers: {TEAM_MEMBERS.join(', ')}</p>
-          </footer>
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm">
+          <h3 class="text-lg font-bold font-fun text-slate-800">Target Sleep Schedule</h3>
+          <p class="text-3xl font-bold text-purple-700 mt-2">10:30 PM → 06:30 AM</p>
+          <p class="text-xs text-slate-500 mt-1">Optimal 8-hour target cycle</p>
         </div>
-      );
+        
+        <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm flex flex-col justify-between">
+          <h3 class="text-lg font-bold font-fun text-slate-800">Quick Sound Player</h3>
+          <button onclick="showTab('relax')" class="w-full mt-3 bg-pink-100 hover:bg-pink-200 text-pink-800 font-bold py-3 rounded-xl transition">
+            🎵 Open Sleep Sounds Player
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- TRACKER TAB -->
+    <div id="tab-tracker" class="tab-content hidden space-y-4">
+      <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
+        <h2 class="text-xl font-bold font-fun text-slate-800">Sleep Logs & History</h2>
+        <div class="p-4 bg-amber-50 border border-amber-200 rounded-xl">
+          <p class="font-bold text-slate-700">Oct 7, 2026 - 7.25 hrs</p>
+          <p class="text-sm text-slate-600">Rating: ⭐⭐⭐⭐ (Felt Pretty Good)</p>
+          <span class="inline-block mt-2 text-xs bg-purple-100 text-purple-800 font-bold px-2.5 py-1 rounded-full">Cool Room</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- RELAX TAB -->
+    <div id="tab-relax" class="tab-content hidden space-y-4">
+      <div class="bg-white p-6 rounded-2xl border border-amber-100 shadow-sm space-y-4">
+        <h2 class="text-xl font-bold font-fun text-slate-800">Sleep Sounds & Ambience</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="p-4 bg-amber-50 border border-amber-200 rounded-2xl flex justify-between items-center">
+            <div>
+              <h4 class="font-bold text-amber-900">Warm Brown Noise</h4>
+              <p class="text-xs text-amber-700">Cozy deep rumble sound</p>
+            </div>
+            <button id="audio-toggle-btn" onclick="toggleAudio()" class="px-4 py-2 bg-amber-600 hover:bg-amber-700 text-white text-xs font-bold rounded-xl transition">
+              Play
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-amber-100 py-4 px-6 text-center text-xs text-slate-500">
+    <p><strong>willowra</strong> · Team Gamechangers: Arnav Kumar, Ashvik Bansal, Anchit Gupta, Aarnav Kansal</p>
+  </footer>
+
+  <!-- Web Audio Synthesizer Script -->
+  <script>
+    function showTab(tabName) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.add('hidden'));
+      document.querySelectorAll('.tab-btn').forEach(el => {
+        el.classList.remove('bg-purple-600', 'text-white');
+        el.classList.add('text-slate-600');
+      });
+
+      document.getElementById('tab-' + tabName).classList.remove('hidden');
+      const activeBtn = document.getElementById('btn-' + tabName);
+      activeBtn.classList.add('bg-purple-600', 'text-white');
+      activeBtn.classList.remove('text-slate-600');
     }
 
-    ReactDOM.createRoot(document.getElementById('root')).render(<App />);
+    let audioCtx = null;
+    let noiseSource = null;
+    let isPlaying = false;
+
+    function toggleAudio() {
+      const btn = document.getElementById('audio-toggle-btn');
+      if (!isPlaying) {
+        if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        if (audioCtx.state === 'suspended') audioCtx.resume();
+
+        const bufferSize = audioCtx.sampleRate * 2;
+        const buffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+        const data = buffer.getChannelData(0);
+        let lastOut = 0.0;
+        for (let i = 0; i < bufferSize; i++) {
+          const white = Math.random() * 2 - 1;
+          data[i] = (lastOut + 0.02 * white) / 1.02;
+          lastOut = data[i];
+          data[i] *= 3.5;
+        }
+
+        noiseSource = audioCtx.createBufferSource();
+        noiseSource.buffer = buffer;
+        noiseSource.loop = true;
+        
+        const filter = audioCtx.createBiquadFilter();
+        filter.type = 'lowpass';
+        filter.frequency.setValueAtTime(320, audioCtx.currentTime);
+
+        noiseSource.connect(filter);
+        filter.connect(audioCtx.destination);
+        noiseSource.start();
+
+        btn.textContent = 'Pause';
+        btn.classList.replace('bg-amber-600', 'bg-red-600');
+        isPlaying = true;
+      } else {
+        if (noiseSource) {
+          noiseSource.stop();
+          noiseSource.disconnect();
+        }
+        btn.textContent = 'Play';
+        btn.classList.replace('bg-red-600', 'bg-amber-600');
+        isPlaying = false;
+      }
+    }
   </script>
 </body>
 </html>
