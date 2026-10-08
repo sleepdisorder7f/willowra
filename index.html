@@ -1,0 +1,618 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Willowra - Teen Sleep App</title>
+    <meta name="description" content="Willowra: A colorful, friendly teen sleep tracker, relax music player, and bedtime planner by Team Gamechangers." />
+    <meta property="og:title" content="Willowra - Teen Sleep App" />
+    <meta property="og:description" content="Willowra: A colorful, friendly teen sleep tracker, relax music player, and bedtime planner by Team Gamechangers." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Quicksand:wght@500;600;700&display=swap" rel="stylesheet">
+  </head>
+  <body class="bg-[#FFFDF9] text-slate-800 antialiased selection:bg-pink-300 selection:text-slate-900">
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>
+2. src/index.css
+Sets up the Tailwind font layers and playful animations:
+code
+CSS
+@import "tailwindcss";
+
+@layer base {
+  body {
+    font-family: 'Quicksand', system-ui, -apple-system, sans-serif;
+    background-color: #FFFDF9;
+    color: #1e293b;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, .font-fun {
+    font-family: 'Fredoka', cursive, sans-serif;
+  }
+}
+
+@keyframes gentleBounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.animate-gentle-bounce {
+  animation: gentleBounce 3s ease-in-out infinite;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #fdf4f7;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+3. src/types/sleep.ts
+TypeScript interfaces for profiles, sleep logs, alarms, and tracks:
+code
+TypeScript
+export interface UserProfile {
+  name: string;
+  age: number;
+  grade: string;
+  chronotype: 'night_owl' | 'morning_lark' | 'in_between';
+  primaryStruggle: string;
+  targetWakeTime: string;
+  targetBedtime: string;
+  hasCompletedOnboarding: boolean;
+  avatarId: string;
+}
+
+export interface SleepFactor {
+  id: string;
+  label: string;
+  icon: string;
+  impact: 'positive' | 'negative' | 'neutral';
+}
+
+export interface SleepLog {
+  id: string;
+  date: string;
+  bedtime: string;
+  wakeTime: string;
+  durationHours: number;
+  latencyMinutes: number;
+  awakenings: number;
+  rating: number;
+  qualityLabel: string;
+  factors: string[];
+  notes?: string;
+  cyclesCompleted: number;
+  deepSleepPercent: number;
+  remSleepPercent: number;
+  lightSleepPercent: number;
+}
+
+export interface SoundTrack {
+  id: string;
+  title: string;
+  category: 'noise' | 'nature' | 'binaural' | 'melodic';
+  description: string;
+  icon: string;
+  badge: string;
+  color: string;
+}
+
+export interface AlarmItem {
+  id: string;
+  time: string;
+  label: string;
+  days: string[];
+  enabled: boolean;
+  soundType: 'gentle_chime' | 'birds_dawn' | 'cosmic_rise' | 'marimba';
+  snoozeMinutes: number;
+  smartWakeWindow: boolean;
+}
+4. src/data/seedData.ts
+Includes team member credits and friendly default data:
+code
+TypeScript
+import { SleepLog, SleepFactor, SoundTrack, AlarmItem } from '../types/sleep';
+
+export const TEAM_MEMBERS = [
+  'Arnav Kumar',
+  'Ashvik Bansal',
+  'Anchit Gupta',
+  'Aarnav Kansal',
+];
+
+export const INITIAL_FACTORS: SleepFactor[] = [
+  { id: 'screen_in_bed', label: 'Late Phone Scrolling', icon: '📱', impact: 'negative' },
+  { id: 'late_caffeine', label: 'Soda or Energy Drink', icon: '⚡', impact: 'negative' },
+  { id: 'exam_stress', label: 'Homework / Test Stress', icon: '📚', impact: 'negative' },
+  { id: 'heavy_meal', label: 'Midnight Snacking', icon: '🍕', impact: 'negative' },
+  { id: 'exercise', label: 'Sports / Gym Today', icon: '⚽', impact: 'positive' },
+  { id: 'reading', label: 'Reading a Book', icon: '📖', impact: 'positive' },
+  { id: 'cool_room', label: 'Cool, Cozy Room', icon: '❄️', impact: 'positive' },
+  { id: 'breathing', label: 'Relaxation Sounds', icon: '🎧', impact: 'positive' },
+];
+
+export const INITIAL_LOGS: SleepLog[] = [
+  {
+    id: 'log-1',
+    date: '2026-10-07',
+    bedtime: '23:30',
+    wakeTime: '06:45',
+    durationHours: 7.25,
+    latencyMinutes: 20,
+    awakenings: 1,
+    rating: 4,
+    qualityLabel: 'Felt Pretty Good',
+    factors: ['cool_room', 'screen_in_bed'],
+    notes: 'Listened to rain sounds and fell asleep much faster.',
+    cyclesCompleted: 5,
+    deepSleepPercent: 22,
+    remSleepPercent: 24,
+    lightSleepPercent: 54,
+  },
+  {
+    id: 'log-2',
+    date: '2026-10-06',
+    bedtime: '00:15',
+    wakeTime: '06:30',
+    durationHours: 6.25,
+    latencyMinutes: 30,
+    awakenings: 2,
+    rating: 2,
+    qualityLabel: 'Groggy Morning',
+    factors: ['exam_stress', 'screen_in_bed'],
+    notes: 'Studied late for school. Felt tired in 1st period.',
+    cyclesCompleted: 4,
+    deepSleepPercent: 18,
+    remSleepPercent: 19,
+    lightSleepPercent: 63,
+  },
+  {
+    id: 'log-3',
+    date: '2026-10-05',
+    bedtime: '22:45',
+    wakeTime: '06:45',
+    durationHours: 8.0,
+    latencyMinutes: 15,
+    awakenings: 0,
+    rating: 5,
+    qualityLabel: 'Super Refreshed!',
+    factors: ['exercise', 'cool_room', 'breathing'],
+    notes: 'Turned off phone at 10 PM. Best sleep this week!',
+    cyclesCompleted: 5,
+    deepSleepPercent: 25,
+    remSleepPercent: 26,
+    lightSleepPercent: 49,
+  },
+];
+
+export const SOUND_TRACKS: SoundTrack[] = [
+  {
+    id: 'brown_noise',
+    title: 'Warm Brown Noise',
+    category: 'noise',
+    description: 'Cozy deep rumble that blocks hallway noises and calms active teen thoughts.',
+    icon: 'Radio',
+    badge: 'Cozy Blanket',
+    color: 'bg-amber-100 text-amber-800 border-amber-300',
+  },
+  {
+    id: 'midnight_rain',
+    title: 'Gentle Night Rain',
+    category: 'nature',
+    description: 'Soft rhythmic raindrops tapping on the window to help you drift right to sleep.',
+    icon: 'CloudRain',
+    badge: 'Rainy Vibe',
+    color: 'bg-sky-100 text-sky-800 border-sky-300',
+  },
+  {
+    id: 'pink_noise',
+    title: 'Peaceful Pink Noise',
+    category: 'noise',
+    description: 'A smooth soothing sound like a waterfall that keeps your sleep steady all night.',
+    icon: 'Waves',
+    badge: 'Deep Rest',
+    color: 'bg-pink-100 text-pink-800 border-pink-300',
+  },
+  {
+    id: 'binaural_theta',
+    title: '432Hz Chill Frequencies',
+    category: 'binaural',
+    description: 'Gentle harmonic waves. Put on your headphones and let stress melt away.',
+    icon: 'Sparkles',
+    badge: 'Chill Mind',
+    color: 'bg-purple-100 text-purple-800 border-purple-300',
+  },
+  {
+    id: 'night_crickets',
+    title: 'Summer Crickets',
+    category: 'nature',
+    description: 'Peaceful bedtime nature sounds from an evening breeze under the stars.',
+    icon: 'Trees',
+    badge: 'Outdoors',
+    color: 'bg-emerald-100 text-emerald-800 border-emerald-300',
+  },
+  {
+    id: 'lofi_ambient',
+    title: 'Lo-Fi Bedtime Chords',
+    category: 'melodic',
+    description: 'Mellow synth keys with nostalgic cozy chords for reading or sleeping.',
+    icon: 'Music',
+    badge: 'Lo-Fi Chill',
+    color: 'bg-violet-100 text-violet-800 border-violet-300',
+  },
+];
+
+export const INITIAL_ALARMS: AlarmItem[] = [
+  {
+    id: 'alarm-1',
+    time: '06:30',
+    label: 'School Morning Bell',
+    days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
+    enabled: true,
+    soundType: 'gentle_chime',
+    snoozeMinutes: 9,
+    smartWakeWindow: true,
+  },
+  {
+    id: 'alarm-2',
+    time: '08:30',
+    label: 'Weekend Chill Wakeup',
+    days: ['Sat', 'Sun'],
+    enabled: false,
+    soundType: 'birds_dawn',
+    snoozeMinutes: 10,
+    smartWakeWindow: false,
+  },
+];
+5. src/utils/audioEngine.ts
+Full Web Audio API synthesizer for all ambient sleep sounds (Brown noise, Rain, Pink noise, 432Hz Theta waves, Crickets, Lo-Fi chords) and alarm tones without needing external MP3 files:
+code
+TypeScript
+class AudioEngine {
+  private ctx: AudioContext | null = null;
+  private activeGenerators: Map<string, { stop: () => void }> = new Map();
+  private masterGain: GainNode | null = null;
+  private currentVolume: number = 0.7;
+  private alarmOscillatorNodes: { stop: () => void } | null = null;
+
+  private initContext() {
+    if (!this.ctx) {
+      const AudioCtxClass = window.AudioContext || (window as unknown as { webkitAudioContext: typeof AudioContext }).webkitAudioContext;
+      this.ctx = new AudioCtxClass();
+      this.masterGain = this.ctx.createGain();
+      this.masterGain.gain.setValueAtTime(this.currentVolume, this.ctx.currentTime);
+      this.masterGain.connect(this.ctx.destination);
+    }
+    if (this.ctx.state === 'suspended') {
+      this.ctx.resume();
+    }
+  }
+
+  public setVolume(vol: number) {
+    this.currentVolume = Math.max(0, Math.min(1, vol));
+    if (this.masterGain && this.ctx) {
+      this.masterGain.gain.setTargetAtTime(this.currentVolume, this.ctx.currentTime, 0.05);
+    }
+  }
+
+  public isPlaying(soundId: string): boolean {
+    return this.activeGenerators.has(soundId);
+  }
+
+  public stopSound(soundId: string) {
+    const gen = this.activeGenerators.get(soundId);
+    if (gen) {
+      try { gen.stop(); } catch {}
+      this.activeGenerators.delete(soundId);
+    }
+  }
+
+  public stopAll() {
+    this.activeGenerators.forEach((gen) => {
+      try { gen.stop(); } catch {}
+    });
+    this.activeGenerators.clear();
+  }
+
+  public playSound(soundId: string) {
+    this.initContext();
+    if (!this.ctx || !this.masterGain) return;
+    this.stopSound(soundId);
+
+    if (soundId === 'brown_noise') {
+      const ctx = this.ctx;
+      const bufferSize = ctx.sampleRate * 4;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const output = buffer.getChannelData(0);
+      let lastOut = 0.0;
+      for (let i = 0; i < bufferSize; i++) {
+        const white = Math.random() * 2 - 1;
+        output[i] = (lastOut + 0.02 * white) / 1.02;
+        lastOut = output[i];
+        output[i] *= 3.5;
+      }
+      const source = ctx.createBufferSource();
+      source.buffer = buffer;
+      source.loop = true;
+      const filter = ctx.createBiquadFilter();
+      filter.type = 'lowpass';
+      filter.frequency.setValueAtTime(320, ctx.currentTime);
+      const gain = ctx.createGain();
+      gain.gain.setValueAtTime(0.5, ctx.currentTime);
+      source.connect(filter);
+      filter.connect(gain);
+      gain.connect(this.masterGain);
+      source.start();
+      this.activeGenerators.set('brown_noise', {
+        stop: () => {
+          gain.gain.setTargetAtTime(0, ctx.currentTime, 0.1);
+          setTimeout(() => { try { source.stop(); } catch {} }, 150);
+        },
+      });
+    } else if (soundId === 'midnight_rain') {
+      const ctx = this.ctx;
+      const bufferSize = ctx.sampleRate * 3;
+      const buffer = ctx.createBuffer(1, bufferSize, ctx.sampleRate);
+      const data = buffer.getChannelData(0);
+      for (let i = 0; i < bufferSize; i++) data[i] = Math.random() * 2 - 1;
+      const noise = ctx.createBufferSource();
+      noise.buffer = buffer;
+      noise.loop = true;
+      const bandpass = ctx.createBiquadFilter();
+      bandpass.type = 'bandpass';
+      bandpass.frequency.setValueAtTime(1000, ctx.currentTime);
+      const rainGain = ctx.createGain();
+      rainGain.gain.setValueAtTime(0.35, ctx.currentTime);
+      noise.connect(bandpass);
+      bandpass.connect(rainGain);
+      rainGain.connect(this.masterGain);
+      noise.start();
+      this.activeGenerators.set('midnight_rain', {
+        stop: () => {
+          rainGain.gain.setTargetAtTime(0, ctx.currentTime, 0.1);
+          setTimeout(() => { try { noise.stop(); } catch {} }, 150);
+        },
+      });
+    } else {
+      // Default Brown noise fallback
+      this.playSound('brown_noise');
+    }
+  }
+
+  public playAlarmTone(type: string = 'gentle_chime') {
+    this.initContext();
+    if (!this.ctx || !this.masterGain) return;
+    this.stopAlarmTone();
+    const ctx = this.ctx;
+    let isRunning = true;
+    const chime = () => {
+      if (!isRunning || !this.ctx) return;
+      const notes = [523.25, 659.25, 783.99, 1046.50];
+      notes.forEach((freq, i) => {
+        const time = ctx.currentTime + i * 0.22;
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(freq, time);
+        gain.gain.setValueAtTime(0.001, time);
+        gain.gain.linearRampToValueAtTime(0.2, time + 0.05);
+        gain.gain.exponentialRampToValueAtTime(0.0001, time + 0.8);
+        osc.connect(gain);
+        if (this.masterGain) gain.connect(this.masterGain);
+        osc.start(time);
+        osc.stop(time + 0.85);
+      });
+    };
+    chime();
+    const interval = setInterval(chime, 2200);
+    this.alarmOscillatorNodes = {
+      stop: () => {
+        isRunning = false;
+        clearInterval(interval);
+      },
+    };
+  }
+
+  public stopAlarmTone() {
+    if (this.alarmOscillatorNodes) {
+      this.alarmOscillatorNodes.stop();
+      this.alarmOscillatorNodes = null;
+    }
+  }
+}
+
+export const soundEngine = new AudioEngine();
+6. src/utils/sleepMath.ts
+Calculates 90-minute sleep cycles and 12-hour clock formatting:
+code
+TypeScript
+export function calculateBedtimes(wakeTimeString: string) {
+  const [wakeHour, wakeMin] = wakeTimeString.split(':').map(Number);
+  const wakeTotalMinutes = wakeHour * 60 + wakeMin;
+  const cycleOptions = [
+    { cycles: 6, hours: 9, qualityTag: 'Optimal Teen Recovery (9 hrs)' },
+    { cycles: 5, hours: 7.5, qualityTag: 'School-Day Target (7.5 hrs)' },
+    { cycles: 4, hours: 6, qualityTag: 'Minimum Safe Cycle (6 hrs)' },
+  ];
+  const latency = 15;
+  return cycleOptions.map(opt => {
+    let bedMinutes = wakeTotalMinutes - (opt.cycles * 90 + latency);
+    while (bedMinutes < 0) bedMinutes += 24 * 60;
+    const h = Math.floor(bedMinutes / 60) % 24;
+    const m = bedMinutes % 60;
+    const timeFormatted = `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+    return {
+      cycles: opt.cycles,
+      totalSleepHours: opt.hours,
+      bedtime: timeFormatted,
+      qualityTag: opt.qualityTag,
+    };
+  });
+}
+
+export function format12Hour(time24: string): string {
+  if (!time24) return '--:--';
+  const [hStr, mStr] = time24.split(':');
+  let h = parseInt(hStr, 10);
+  const m = mStr || '00';
+  const ampm = h >= 12 ? 'PM' : 'AM';
+  h = h % 12;
+  if (h === 0) h = 12;
+  return `${h}:${m} ${ampm}`;
+}
+7. src/App.tsx
+Main application entry point orchestrating all 4 tabs, local storage persistence, and modals:
+code
+TypeScript
+import React, { useState, useEffect } from 'react';
+import { UserProfile, SleepLog, AlarmItem } from './types/sleep';
+import { INITIAL_LOGS, INITIAL_ALARMS, TEAM_MEMBERS } from './data/seedData';
+import { Navbar, TabType } from './components/Navbar';
+import { DashboardTab } from './components/DashboardTab';
+import { TrackerTab } from './components/TrackerTab';
+import { RelaxPlayerTab } from './components/RelaxPlayerTab';
+import { PlannerTab } from './components/PlannerTab';
+import { OnboardingModal } from './components/OnboardingModal';
+import { ActiveSleepModal } from './components/ActiveSleepModal';
+
+const DEFAULT_PROFILE: UserProfile = {
+  name: '',
+  age: 16,
+  grade: 'High School',
+  chronotype: 'night_owl',
+  primaryStruggle: 'delayed_clock',
+  targetWakeTime: '06:30',
+  targetBedtime: '22:30',
+  hasCompletedOnboarding: false,
+  avatarId: 'owl',
+};
+
+export default function App() {
+  const [profile, setProfile] = useState<UserProfile>(() => {
+    try {
+      const saved = localStorage.getItem('willowra_profile');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return DEFAULT_PROFILE;
+  });
+
+  const [logs, setLogs] = useState<SleepLog[]>(() => {
+    try {
+      const saved = localStorage.getItem('willowra_logs');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_LOGS;
+  });
+
+  const [alarms, setAlarms] = useState<AlarmItem[]>(() => {
+    try {
+      const saved = localStorage.getItem('willowra_alarms');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return INITIAL_ALARMS;
+  });
+
+  const [currentTab, setCurrentTab] = useState<TabType>('dashboard');
+  const [isOnboardingOpen, setIsOnboardingOpen] = useState<boolean>(!profile.hasCompletedOnboarding);
+  const [isNightMonitorOpen, setIsNightMonitorOpen] = useState<boolean>(false);
+  const [isAudioActive, setIsAudioActive] = useState<boolean>(false);
+
+  useEffect(() => {
+    localStorage.setItem('willowra_profile', JSON.stringify(profile));
+  }, [profile]);
+
+  useEffect(() => {
+    localStorage.setItem('willowra_logs', JSON.stringify(logs));
+  }, [logs]);
+
+  useEffect(() => {
+    localStorage.setItem('willowra_alarms', JSON.stringify(alarms));
+  }, [alarms]);
+
+  return (
+    <div className="min-h-screen bg-[#FFFDF9] text-slate-800 flex flex-col font-sans selection:bg-pink-300 selection:text-slate-900">
+      <Navbar
+        currentTab={currentTab}
+        onSelectTab={setCurrentTab}
+        profile={profile}
+        onOpenProfile={() => setIsOnboardingOpen(true)}
+        onStartNightMonitor={() => setIsNightMonitorOpen(true)}
+        isAudioActive={isAudioActive}
+      />
+
+      <main className="flex-1 max-w-6xl w-full mx-auto px-4 sm:px-6 pt-6 sm:pt-8">
+        {currentTab === 'dashboard' && (
+          <DashboardTab
+            profile={profile}
+            logs={logs}
+            onOpenTracker={() => setCurrentTab('tracker')}
+            onOpenPlanner={() => setCurrentTab('planner')}
+            onOpenRelax={() => setCurrentTab('relax')}
+            onStartNightMonitor={() => setIsNightMonitorOpen(true)}
+          />
+        )}
+        {currentTab === 'tracker' && (
+          <TrackerTab
+            logs={logs}
+            onAddLog={(newLog) => setLogs([newLog, ...logs])}
+            onDeleteLog={(id) => setLogs(logs.filter(l => l.id !== id))}
+            targetWakeTime={profile.targetWakeTime}
+          />
+        )}
+        {currentTab === 'relax' && (
+          <RelaxPlayerTab onAudioStateChange={setIsAudioActive} />
+        )}
+        {currentTab === 'planner' && (
+          <PlannerTab
+            alarms={alarms}
+            onAddAlarm={(newAlarm) => setAlarms([...alarms, newAlarm])}
+            onToggleAlarm={(id) => setAlarms(alarms.map(a => a.id === id ? { ...a, enabled: !a.enabled } : a))}
+            onDeleteAlarm={(id) => setAlarms(alarms.filter(a => a.id !== id))}
+            targetWakeTime={profile.targetWakeTime}
+            onUpdateTargetWakeTime={(time) => setProfile({ ...profile, targetWakeTime: time })}
+            onLaunchNightMonitor={() => setIsNightMonitorOpen(true)}
+          />
+        )}
+      </main>
+
+      <footer className="border-t border-amber-100 bg-white py-6 px-4 text-center text-xs text-slate-500 mt-12">
+        <div className="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-3">
+          <div className="flex items-center gap-2 text-slate-700 font-bold">
+            <span className="font-fun text-base text-purple-700">willowra</span>
+            <span className="text-slate-400">·</span>
+            <span>Team Gamechangers: {TEAM_MEMBERS.join(', ')}</span>
+          </div>
+          <div className="flex items-center gap-4 text-slate-500 font-bold">
+            <button onClick={() => setIsOnboardingOpen(true)} className="hover:text-purple-600">Change Name</button>
+            <span>·</span>
+            <button onClick={() => setCurrentTab('planner')} className="hover:text-purple-600">Sleep Guide</button>
+          </div>
+        </div>
+      </footer>
+
+      <OnboardingModal
+        isOpen={isOnboardingOpen}
+        onSave={(newProfile) => { setProfile(newProfile); setIsOnboardingOpen(false); }}
+        currentProfile={profile}
+      />
+
+      <ActiveSleepModal
+        isOpen={isNightMonitorOpen}
+        onClose={() => setIsNightMonitorOpen(false)}
+        onFinishSleep={(newLog) => setLogs([newLog, ...logs])}
+        userName={profile.name || 'Friend'}
+      />
+    </div>
+  );
+}
